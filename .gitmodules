@@ -1,0 +1,3 @@
+[submodule "lib/cs-oead"]
+	path = lib/cs-oead
+	url = https://github.com/EPD-Libraries/cs-oead.git
