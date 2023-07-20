@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TotkScript", "src\TotkScript.csproj", "{D860495C-D3FC-4EC3-9545-6A503E641CCB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{D3F3E05F-B1B0-496B-B98B-8581117313F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsOead", "lib\cs-oead\src\CsOead.csproj", "{1BF60D95-5362-46E7-AE48-810271C213E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Native.IO", "lib\cs-oead\lib\Native.IO\src\Native.IO.csproj", "{F3181353-4153-45E9-9FC1-4FFFF72262EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D860495C-D3FC-4EC3-9545-6A503E641CCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D860495C-D3FC-4EC3-9545-6A503E641CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D860495C-D3FC-4EC3-9545-6A503E641CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D860495C-D3FC-4EC3-9545-6A503E641CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BF60D95-5362-46E7-AE48-810271C213E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BF60D95-5362-46E7-AE48-810271C213E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BF60D95-5362-46E7-AE48-810271C213E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BF60D95-5362-46E7-AE48-810271C213E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3181353-4153-45E9-9FC1-4FFFF72262EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3181353-4153-45E9-9FC1-4FFFF72262EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3181353-4153-45E9-9FC1-4FFFF72262EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3181353-4153-45E9-9FC1-4FFFF72262EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1BF60D95-5362-46E7-AE48-810271C213E7} = {D3F3E05F-B1B0-496B-B98B-8581117313F1}
+		{F3181353-4153-45E9-9FC1-4FFFF72262EC} = {D3F3E05F-B1B0-496B-B98B-8581117313F1}
+	EndGlobalSection
+EndGlobal
