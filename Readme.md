@@ -31,7 +31,7 @@ This is the written tutorial for a [video tutorial I made](https://youtu.be/pKMc
 - [Summary](#summary)
 
 # Tools & Setup
-> [Timetamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=13s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=13s)
 
 ## IDE or Text Editor
 
@@ -60,7 +60,7 @@ For the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0), th
 As for [MinGW](https://github.com/brechtsanders/winlibs_mingw/releases/tag/13.1.0-16.0.5-11.0.0-ucrt-r5) and [Ninja](https://ninja-build.org/), these are both installed by extracting the zip archives and copying the contents to a folder of your choice (you'll need to [add these to PATH]() later, so keep in mind where you put it).
 
 ## Adding MinGW and Ninja to the PATH
-> [Timetamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=350s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=350s)
 
 For the commands used in this tutorial to work, you'll need to add MinGW and Ninja to the system PATH.
 
@@ -75,7 +75,7 @@ Under the **System variables**, scroll down until you find a key labelled `Path`
 Finally, click the button on the top right labelled `New` and enter the path to the Ninja folder *(folder containing `ninja.exe`)* in the new entry. Do the same for the `MinGW` path, **and make sure to append `\bin` to the end of the path**.
 
 # NX-Editor Setup
-> [Timetamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=305s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=305s)
 
 To set up NX-Editor, simply run the downloaded `exe` and provide your game path on the settings page.
 
@@ -84,7 +84,7 @@ The field will turn green if the game path is valid. If it does not, make sure y
 <img src="assets/game_dump.png" width=500>
 
 # Creating the C# Project
-> [Timetamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=427s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=427s)
 
 Now that everything is properly set up, we can begin by creating a C# solution and project.
 
@@ -99,7 +99,7 @@ This can be done on all platforms using the dotnet SDK command-line tools.
 4. Build and run the application to make sure everything works correctly
 
 # Setting up libraries (Part 1, git)
-> [Timeline](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=617s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=617s)
 
 Before moving forward, you'll need to install another piece of software, [git](https://git-scm.com/). This is a popular version control system used in modern development, it will allow us to clone [cs-oead](https://github.com/EPD-Libraries/cs-oead) into our project without re-publishing the code.
 
@@ -126,7 +126,7 @@ Once cloning has completed, you'll need to add the `CsOead` and `Native.IO` proj
 2. **Add Native.IO:** `dotnet sln add lib/cs-oead/lib/Native.IO/src/Native.IO.csproj -s Libraries` *(replace `lib/cs-oead` with the clone path used in the previous step; `-s` optionally adds a folder to the solution for a cleaner project)*
 
 # Add Project Reference & Load CsOead
-> [Timeline](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=946s)
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=946s)
 
 ## Building CsOead and Native.IO (C++)
 
@@ -179,15 +179,24 @@ Console.WriteLine(isOeadLoaded);
 ```
 
 # Copying & Decompressing the Game Files
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1188s)
 
 # Loading the File in Memory
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1360s)
 
 # Parsing a SARC
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1430s)
 
 # Parsing a BYML
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1523s)
 
 # Saving the Modified Files
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1670s)
 
 # Checking the Results
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1862s)
 
 # Summary
+> [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1877s)
+
+If you need any help or have any questions, feel free to ask me in my [Discord server](https://discord.gg/8Saj6tTkNB).
