@@ -23,7 +23,10 @@ This is the written tutorial for a [video tutorial I made](https://youtu.be/pKMc
   - [Add Projects Reference](#add-projects-reference)
   - [Loading CsOead](#loading-csoead)
 - [Copying \& Decompressing the Game Files](#copying--decompressing-the-game-files)
+  - [Decompressing](#decompressing)
+  - [Plan your Edits](#plan-your-edits)
 - [Loading the File in Memory](#loading-the-file-in-memory)
+  - [Alternative Method](#alternative-method)
 - [Parsing a SARC](#parsing-a-sarc)
 - [Parsing a BYML](#parsing-a-byml)
 - [Saving the Modified Files](#saving-the-modified-files)
@@ -137,7 +140,7 @@ cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUI
 cmake --build ./build --config Release --target all -j 4
 ```
 
-**Note:** If you're on linux or macos, append `linux`/`macos` to the build path.
+**Note:** If you're on Linux or MacOS, append `linux`/`macos` to the build path.
 
 ### Building Native.IO
 
@@ -145,7 +148,7 @@ From the [cs-oead](https://github.com/EPD-Libraries/cs-oead) directory, navigate
 
 ## Add Projects Reference
 
-In your IDE/editor, open the console `csproj` file as `xml`, and in the `Project` tag (underneath `PropertyGroup`) add the following code:
+In your IDE/editor, open the console `csproj` file as `XML`, and in the `Project` tag (underneath `PropertyGroup`) add the following code:
 
 ```xml
 <ItemGroup>
@@ -181,22 +184,183 @@ Console.WriteLine(isOeadLoaded);
 # Copying & Decompressing the Game Files
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1188s)
 
+Now that [cs-oead](https://github.com/EPD-Libraries/cs-oead) is set up, we need to get the files to edit. For this tutorial, I will simply change the defence value of an armour piece. Similar concepts will apply to other game files though.
+
+Once you've found the file you're going to edit, copy it to another location so you don't mess up your game dump.
+
+## Decompressing
+
+**Important:** If the file you're editing ends with `.zs`, you'll need to decompress it first. You can do this in automatically C#, but for simplicity, I'll just assume you've decompressed it manually beforehand.
+
+This can be done using [TotK ZstdTool](https://github.com/TotkMods/Totk.ZStdTool/releases/latest), which can be downloaded from [github](https://github.com/TotkMods/Totk.ZStdTool/releases/latest).
+
+Download the build for your platform (Windows and Linux supported) and run the exe. Next, open the settings (bottom left) and verify the game path is correctly set (it will pick up the nx-editor config automatically if you set that up earlier).
+
+Finally, drag the `.zs` file over the file path (top field), click `Decompress` and save the output file.
+
+## Plan your Edits
+
+Once your file is prepped you should plan your edits. This can be done using any visual editor for the file format, but I recommend using [NX-Editor](https://nx-editor.github.io/). If you set up [NX-Editor](https://nx-editor.github.io/) earlier, simply open your chosen file by dragging it over the main window.
+
+In my case, I chose a SARC file (.pack) to edit, so it opens a file tree of the archive. I know that in TotK the `BaseDefense` value is stored in the BYML file (.bgyml) `Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml`. I can then open the file and preview the BYML file converted to YAML.
+
+Inside the YAML I can see the `BaseDefense` key, which is the value I want to edit in my script.
+
+Now we have all the information we need:
+
+- The game file to edit (decompressed): `/Pack/Actor/Armor_001_Head.pack`
+- The file inside the SARC to edit: `Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml`
+- And finally, the key inside the BYML to edit: `BaseDefense`
+
 # Loading the File in Memory
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1360s)
+
+To edit the game file we first need to load it into our application memory as raw data.
+
+This is quite trivial to do using the `File` class provided in the dotnet clr in `System.IO`
+
+If you're ***not*** using *implicit usings*, add the `System.IO` using statement to the top of the file.
+
+```cs
+using System.IO;
+```
+
+First, we need to open a `FileStream` into our copied game file from earlier.
+
+```cs
+using FileStream fs = File.OpenRead(".\\Armor_001_Head.pack");
+```
+
+Once that's in place we need to create a new `byte[]` big enough to store the raw file data. This can be done as follows.
+
+```cs
+byte[] buffer = new byte[fs.Length];
+```
+
+Finally, we need to read the file into our `byte[]`, this can be done using the `FileStream.Read` method like this.
+
+```cs
+fs.Read(buffer);
+```
+
+Now you should have a code snippet similar to the following:
+
+```cs
+using FileStream fs = File.OpenRead(".\\Armor_001_Head.pack");
+byte[] buffer = new byte[fs.Length];
+fs.Read(buffer);
+```
+
+## Alternative Method
+
+This could also be written in one line like this:
+
+```cs
+byte[] buffer = File.ReadAllBytes(".\\Armor_001_Head.pack");
+```
+
+The only reason I did it the other way is because it explains what is happening better.
 
 # Parsing a SARC
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1430s)
 
+Now that we have the file buffer, we need to parse it into a SARC object to extract the sub-file data.
+
+To load a SARC object from a `byte[]` we need to use the `Sarc.FromBinary` function.
+
+```cs
+Sarc sarc = Sarc.FromBinary(buffer);
+```
+
+Now that we have the `Sarc` in memory, we need to get the sub-file data from it. This is done using the indexer, which takes in a `string key` and returns a `ReadOnlySpan<byte>`.
+
+```cs
+ReadOnlySpan<byte> data = sarc["Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml"];
+```
+
 # Parsing a BYML
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1523s)
+
+Becuse we planned our edits earlier, we know that the data return from the SARC is a BYML (.bgyml) file. So we can use the `Byml` class to parse the raw data into an editable object.
+
+```cs
+Byml byml = Byml.FromBinary(data);
+```
+
+Next, we just need to change the `BaseDefense` value located earlier. To do this we will first need to get the container holding all the keys/values in order to query for `BaseDefense` and set the value. In this case, the root container is a hash (similar to a [Dictionary](https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.dictionary-2?view=net-7.0)) so we will use `Byml.GetHash`.
+
+```cs
+BymlHash hash = byml.GetHash();
+```
+
+Finally, we simply query the hash for our key and set the value.
+
+```cs
+hash["BaseDefense"] = 6;
+```
 
 # Saving the Modified Files
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1670s)
 
+Now that the file is modified in memory (the application), we need to write it back to a file. Doing this requires getting a `byte[]` from our `Sarc` and `Byml` instances. This is called [serializing](https://en.wikipedia.org/wiki/Serialization) and can be done with the `ToBinary` function; which, returns an unsafe `byte[]` wrapped in the `DataMarshal` class.
+
+So with a rough plan in mind, the first thing we need to do is set the SARC file data to our edited BYML data. This is done in the same way we got the data, except instead of collecting the `ReadOnlySpan<byte>` we set it to the serialized BYML file.
+
+```cs
+DataMarshal outputByml = byml.ToBinary(Endianness.Little, version: 7);
+sarc["Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml"] = outputByml;
+```
+
+Now that the SARC is also edited, we need to serialize it and write that to a file using a `FileStream`.
+
+```cs
+DataMarshal outputSarc = sarc.ToBinary(Endianness.Little);
+using FileStream output = File.Create(".\\Armor_001_Head.output.pack");
+output.Write(outputSarc)
+```
+
+**Note:** Using `File.WriteAllBytes(".\\Armor_001_Head.output.pack", outputSarc.ToArray())` is ***NOT*** the same as using a `FileStream`. It will copy the data an additional time, which can waste processing time.
+
 # Checking the Results
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1862s)
+
+If you followed all the previous steps, you should be left with a file similar to this.
+
+```cs
+using CsOead;
+using Native.IO.Handles;
+using Native.IO.Services;
+
+NativeLibraryManager
+    .RegisterPath("D:\\Bin\\native", out bool isCommonLoaded)
+    .Register(new OeadLibrary(), out bool isOeadSuccess);
+
+Console.WriteLine(isCommonLoaded);
+Console.WriteLine(isOeadSuccess);
+
+using FileStream fs = File.OpenRead(".\\Armor_001_Head.pack");
+byte[] buffer = new byte[fs.Length];
+fs.Read(buffer);
+
+Sarc sarc = Sarc.FromBinary(buffer);
+ReadOnlySpan<byte> data = sarc["Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml"];
+
+Byml byml = Byml.FromBinary(data);
+BymlHash hash = byml.GetHash();
+hash["BaseDefense"] = 6;
+
+DataMarshal outputData = byml.ToBinary(Endianness.Little, 7);
+sarc["Component/ArmorParam/Armor_001_Head.game__component__ArmorParam.bgyml"] = outputData;
+
+DataMarshal outputSarc = sarc.ToBinary(Endianness.Little);
+
+using FileStream output = File.Create(".\\Armor_001_Head.output.pack");
+output.Write(outputSarc.AsSpan());
+```
+
+Once you've reviewed your script, run it using `dotnet run` or using your IDE/editor's debugger. If done correctly it should write the file to your specified output, open that with [NX-Editor](https://nx-editor.github.io/) and make sure your changes are applied.
 
 # Summary
 > [Timestamp](https://www.youtube.com/watch?v=pKMcCp1WjoU&t=1877s)
 
-If you need any help or have any questions, feel free to ask me in my [Discord server](https://discord.gg/8Saj6tTkNB).
+If you need any help or have any questions, feel free to ask me on my [Discord server](https://discord.gg/8Saj6tTkNB).
